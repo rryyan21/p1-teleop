@@ -4,7 +4,6 @@ cmake-build-*/
 
 # Executables
 teleop
-mbot_driver
 *.out
 *.o
 
