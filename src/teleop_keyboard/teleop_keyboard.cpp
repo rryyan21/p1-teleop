@@ -23,28 +23,23 @@ void TeleopKeyboard::spin(
     uint32_t seq = 0;
     
     while (true) {
-        // Check if SIGINT has been received
         if (notif->is_ready()) {
             return;
         }
         
-        // Read a single character
         uint8_t char_buffer;
         ssize_t bytes_read = input->read(&char_buffer, 1);
         
-        // Handle EOF
         if (bytes_read == 0) {
             return;
         }
         
-        // If read error, continue
         if (bytes_read < 0) {
             continue;
         }
         
         char key = static_cast<char>(char_buffer);
         
-        // Create twist command based on key
         geometry::Twist2DStamped twist_cmd;
         bool valid_key = true;
         
@@ -82,38 +77,31 @@ void TeleopKeyboard::spin(
                 break;
         }
         
-        // Only send command if key was valid
         if (!valid_key) {
             continue;
         }
         
-        // Set up header
         twist_cmd.header.seq = seq++;
         twist_cmd.header.frame_id = "mbot";
         twist_cmd.header.stamp = rix::util::Time::now().to_msg();
         
-        // Calculate message size
         size_t msg_size = twist_cmd.size();
         
-        // Serialize size (UInt32)
         standard::UInt32 size_msg;
         size_msg.data = static_cast<uint32_t>(msg_size);
         std::vector<uint8_t> size_buffer(4);
         size_t offset = 0;
         size_msg.serialize(size_buffer.data(), offset);
         
-        // Write size to stdout
         ssize_t written = output->write(size_buffer.data(), size_buffer.size());
         if (written < 0) {
             continue;
         }
         
-        // Serialize message
         std::vector<uint8_t> msg_buffer(msg_size);
         offset = 0;
         twist_cmd.serialize(msg_buffer.data(), offset);
         
-        // Write message to stdout
         written = output->write(msg_buffer.data(), msg_buffer.size());
         if (written < 0) {
             continue;
