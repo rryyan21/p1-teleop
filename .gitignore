@@ -1,0 +1,33 @@
+# Build artifacts
+build/
+cmake-build-*/
+
+# Executables
+teleop
+mbot_driver
+*.out
+*.o
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+
+# Logs / temp
+*.log
+*.tmp
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor junk
+.vscode/
+.idea/
+*.swp
+
+# Python junk (sometimes sneaks in)
+__pycache__/
+*.pyc
